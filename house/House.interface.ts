@@ -12,6 +12,13 @@ export interface IHouse {
     // Количество еды в холодильнике (от 0 до 100)
     food: number;
 
+    // Общее количество заработанных денег
+    totalEarnedMoney: number;
+    // Общее количество съеденной еды
+    totalEatenFood: number;
+    // общее количество купленных шуб
+    totalFurCoatsBought: number;
+
     // Заселение жителя
     addResident(resident: IResident): void;
     // Выселение жителя
@@ -24,10 +31,15 @@ export interface IHouse {
     addFood(amount: number): void;
     // Взятие еды из холодильника
     takeFood(amount: number): void;
-    // Ежедневное увеличение уровня грязи на 5 пунктов
-    dailyDirtIncrease(): void;
     // Увеличение уровня грязи
     increaseDirtLevel(amount: number): void;
     // Генеральная уборка
     cleanHouse(): void;
+
+    // Увеличение общего количества съеденной еды
+    incrementEatenFood(amount: number): void;
+    // Увеличение общего количества купленных шуб
+    incrementFurCoatsBought(): void;
+    // Ежедневное действие
+    dailyActivity(): void;
 }

@@ -18,7 +18,7 @@ export class House implements IHouse {
     // Общее количество съеденной еды
     private _totalEatenFood: number = 0;
     // общее количество купленных шуб
-    private _totalFurCoatsBought = 0;
+    private _totalFurCoatsBought: number = 0;
 
     constructor(name: string) {
         this._name = name;
@@ -65,6 +65,7 @@ export class House implements IHouse {
             return Log.error('Некорректное значение изменения денег!');
         }
         this._money += amount;
+        this.incrementEarnedMoney(amount);
     }
 
     // Взятие денег из дома
@@ -192,10 +193,13 @@ export class House implements IHouse {
         // Пропадает половина денег
         if (randomNumber === 10) {
             this.halfMoneyLoss();
+            Log.warn('Пропала половина денег!');
         }
         // Пропадает половина еды
         if (randomNumber === 20) {
             this.halfFoodLoss();
+            Log.warn('Пропала половина еды!');
         }
+        Log.dim(this.houseInfo);
     }
 }
