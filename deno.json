@@ -1,0 +1,14 @@
+{
+	"fmt": {
+		"useTabs": false,
+		"lineWidth": 80,
+		"indentWidth": 4,
+		"semiColons": true,
+		"singleQuote": true,
+		"proseWrap": "never"
+	},
+	"tasks": {
+		"dev": "deno run --watch main.ts",
+		"start": "deno run main.ts"
+	}
+}
