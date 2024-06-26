@@ -1,4 +1,4 @@
-class Log {
+export class Log {
     static readonly reset = '\x1b[0m';
 
     static readonly bgWhite = '\x1b[47m'; // console.log()
