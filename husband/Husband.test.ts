@@ -1,6 +1,6 @@
 import { assertStrictEquals } from 'https://deno.land/std@0.224.0/assert/mod.ts';
 import { Husband } from './Husband.class.ts';
-import { MockHouse } from '../house/Mock.House.ts';
+import { MockHouse } from '../house/Mock.house.ts';
 
 Deno.test('Проверяю, что уровень сытости корректно увеличивается и уменьшается', () => {
     const mockHouse = new MockHouse('Тестовый дом');
