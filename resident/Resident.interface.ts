@@ -4,7 +4,7 @@ export interface IResident {
     // Имя жителя
     readonly name: string;
     // Дом, где прописан
-    house: IHouse;
+    houseName: IHouse;
     // Уровень сытости (от 0 до 100, в начале - 30)
     satiety: number;
     // Уровень счастья (от 0 до 100, в начале - 100)
