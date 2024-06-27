@@ -115,6 +115,8 @@ Deno.test('Проверяю, что корректно увеличиваетс�
     const mockHouse = new MockHouse('Тестовый дом');
     const husband: Husband = new Husband('Тестовый муж', mockHouse);
     mockHouse.addResident(husband);
+    // Добавил еды, иначе всем не хватит
+    mockHouse.addFood(50)
     husband['_eat']();
     assertStrictEquals(mockHouse.totalEatenFood, 30);
     const wife: Wife = new Wife('Тестовая жена', mockHouse);
