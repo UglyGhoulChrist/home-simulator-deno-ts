@@ -58,6 +58,7 @@ export class Wife extends Resident {
             this.houseName.takeMoney(300);
             this.changeHappiness(100);
             this.changeSatiety(-10);
+            this.houseName.incrementFurCoatsBought();
             return true;
         } else {
             Log.warn(`${this.name} хотела купить шубу, но дома мало денег`);
