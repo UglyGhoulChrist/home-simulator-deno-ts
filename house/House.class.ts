@@ -130,6 +130,15 @@ export class House implements IHouse {
             Log.warn('Уровень грязи превышен!');
             this._dirtLevel = Math.min(this._dirtLevel, 100);
         }
+        if (this._dirtLevel >= 90) {
+            this.residents.forEach((resident) => {
+                // Проверяем, содержит ли resident метод changeHappiness
+                if (
+                    'changeHappiness' in resident &&
+                    typeof resident['changeHappiness'] === 'function'
+                ) resident.changeHappiness(-5);
+            });
+        }
     }
 
     // Несколько раз в год пропадает половина денег
