@@ -1,3 +1,4 @@
+import { Cat } from '../cat/Cat.class.ts';
 import { IHouse } from '../house/House.interface.ts';
 import { Resident } from '../resident/Resident.class.ts';
 import { Log } from '../utils/Log.class.ts';
@@ -6,6 +7,7 @@ enum Action {
     Eat = 'поел',
     Sleep = 'поспал',
     Play = 'поиграл',
+    PetCat = 'погладила кота', //! Должен быть последним
 }
 
 export class Child extends Resident {
@@ -44,9 +46,27 @@ export class Child extends Resident {
         return true;
     }
 
+    // Поглаживание кота
+    private _petCat(): boolean {
+        this.changeHappiness(5);
+        return true;
+    }
+
     // Случайный выбор ежедневного действия
     public randomDailyActivity(): void {
         const actions: Action[] = Object.values(Action);
+
+        // Проверка наличия кота в доме
+        const hasCat: boolean = this.houseName.residents.some(resident => resident instanceof Cat);
+
+        // Если кота нет, убираем действие PetCat из списка возможных действий
+        if (!hasCat) {
+            const index: number = actions.indexOf(Action.PetCat);
+            if (index > -1) {
+                actions.splice(index, 1);
+            }
+        }
+
         const randomIndex: number = Math.floor(Math.random() * actions.length);
         const randomAction: Action = actions[randomIndex];
 
@@ -69,6 +89,8 @@ export class Child extends Resident {
                 return this._sleep();
             case Action.Play:
                 return this._play();
+            case Action.PetCat:
+                return this._petCat();
             default:
                 return false;
         }
