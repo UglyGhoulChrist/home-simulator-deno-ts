@@ -22,6 +22,8 @@ export class Cat extends Resident {
     private _eat(): boolean {
         if (this.houseName.food >= 5) {
             this.houseName.takeFood(5);
+            // Увеличиваю счётчик съеденной еды
+            this.houseName.incrementEatenFood(5);
             this.changeSatiety(20);
             return true;
         } else {
