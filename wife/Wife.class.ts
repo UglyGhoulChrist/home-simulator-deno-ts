@@ -31,6 +31,8 @@ export class Wife extends Resident {
     private _eat(): boolean {
         if (this.houseName.food >= 20) {
             this.houseName.takeFood(20);
+            // Увеличиваю счётчик съеденной еды
+            this.houseName.incrementEatenFood(20);
             this.changeSatiety(30);
             return true;
         } else {
