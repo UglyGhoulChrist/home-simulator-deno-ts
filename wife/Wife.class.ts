@@ -38,7 +38,7 @@ export class Wife extends Resident {
             this.changeSatiety(30);
             return true;
         } else {
-            Log.warn(`${this.name} хотела поесть, но дома мало еды`);
+            Log.red(`${this.name} хотела поесть, но дома закончилась еда!`);
             return false;
         }
     }
@@ -51,7 +51,9 @@ export class Wife extends Resident {
             this.changeSatiety(-10);
             return true;
         } else {
-            Log.warn(`${this.name} хотела купить еды, но дома мало денег`);
+            Log.red(
+                `${this.name} хотела купить еды, но дома закончились деньги!`,
+            );
             return false;
         }
     }
@@ -65,7 +67,9 @@ export class Wife extends Resident {
             this.houseName.incrementFurCoatsBought();
             return true;
         } else {
-            Log.warn(`${this.name} хотела купить шубу, но дома мало денег`);
+            Log.red(
+                `${this.name} хотела купить шубу, но дома закончились деньги!`,
+            );
             return false;
         }
     }
