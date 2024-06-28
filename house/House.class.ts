@@ -76,7 +76,7 @@ export class House implements IHouse {
         if (amount <= this._money) {
             this._money -= amount;
         } else {
-            Log.warn('Недостаточно денег!');
+            Log.red('В доме закончились деньги!');
         }
     }
 
@@ -101,7 +101,7 @@ export class House implements IHouse {
         if (amount <= this._food) {
             this._food -= amount;
         } else {
-            Log.warn('Недостаточно еды!');
+            Log.red('В доме закончилась еда!');
         }
     }
 
@@ -116,7 +116,6 @@ export class House implements IHouse {
             return Log.error('Некорректное значение изменения уровня грязи!');
         }
         this._dirtLevel += amount;
-        this.checkDirtLevel();
     }
 
     // Генеральная уборка
@@ -127,10 +126,10 @@ export class House implements IHouse {
     // Проверка уровня грязи
     private checkDirtLevel(): void {
         if (this._dirtLevel >= 100) {
-            Log.warn('Уровень грязи превышен!');
+            Log.red('Дом стал слишком грязным!');
             this._dirtLevel = Math.min(this._dirtLevel, 100);
         }
-        if (this._dirtLevel >= 90) {
+        if (this._dirtLevel >= 80) {
             this.residents.forEach((resident) => {
                 // Проверяем, содержит ли resident метод changeHappiness
                 if (
@@ -202,13 +201,13 @@ export class House implements IHouse {
         // Пропадает половина денег
         if (randomNumber === 10) {
             this.halfMoneyLoss();
-            Log.warn('Пропала половина денег!');
+            Log.red('В доме пропала половина денег!');
         }
         // Пропадает половина еды
         if (randomNumber === 20) {
             this.halfFoodLoss();
-            Log.warn('Пропала половина еды!');
+            Log.red('В доме пропала половина продуктов!');
         }
-        Log.dim(this.houseInfo);
+        // Log.dim(this.houseInfo);
     }
 }

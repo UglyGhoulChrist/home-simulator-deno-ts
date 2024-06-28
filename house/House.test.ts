@@ -80,6 +80,7 @@ Deno.test('Проверяю, что грязь не может быть боль
     const mockHouse = new MockHouse('Тестовый дом');
     mockHouse.increaseDirtLevel(60);
     mockHouse.increaseDirtLevel(60);
+    mockHouse.dailyActivity()
     assertStrictEquals(mockHouse.dirtLevel, 100);
     mockHouse.cleanHouse();
     for (let i = 0; i < 21; i++) {

@@ -24,12 +24,12 @@ export class Child extends Resident {
     private _eat(): boolean {
         if (this.houseName.food >= 10) {
             this.houseName.takeFood(10);
-            // Увеличиваю счётчик съеденной еды 
+            // Увеличиваю счётчик съеденной еды
             this.houseName.incrementEatenFood(10);
             this.changeSatiety(20);
             return true;
         } else {
-            Log.warn(`${this.name} хотел поесть, но дома мало еды`);
+            Log.red(`${this.name} хотел поесть, но дома закончилась еда!`);
             return false;
         }
     }
@@ -57,7 +57,9 @@ export class Child extends Resident {
         const actions: Action[] = Object.values(Action);
 
         // Проверка наличия кота в доме
-        const hasCat: boolean = this.houseName.residents.some(resident => resident instanceof Cat);
+        const hasCat: boolean = this.houseName.residents.some((resident) =>
+            resident instanceof Cat
+        );
 
         // Если кота нет, убираем действие PetCat из списка возможных действий
         if (!hasCat) {

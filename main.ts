@@ -29,16 +29,34 @@ const cat: IResident = new Cat('Снупи', house);
 house.addResident(cat);
 
 Log.dim('Жизнь семьи');
+Log.dim(
+    `В ${house.name} заселяются: ${
+        house.residents.map((resident) => resident.name).join(', ')
+    }`,
+);
 
 // Запуск симуляции на 10 дней
-for (let day = 1; day <= 10; day++) {
-    Log.dim(`День ${day}.`);
-    house.dailyActivity();
+for (let day = 1; day <= 365; day++) {
+    Log.dim(`День ${day}:`);
     const residents: IResident[] = house.residents;
     residents.map((resident) => resident.randomDailyActivity());
+    house.dailyActivity();
+    if (house.dirtLevel >= 100) {
+        Log.red('Дом развалился от грязи!');
+        break; // Останавливаем цикл, если уровень грязи >= 100
+    }
 }
 
-Log.dim('Итоги жизни за год:');
-Log.dim(`- Заработано денег: ${house.totalEarnedMoney}`);
-Log.dim(`- Cъедено еды: ${house.totalEatenFood}`);
-Log.dim(`- Куплено шуб: ${house.totalFurCoatsBought}`);
+if (house.dirtLevel < 100) {
+    Log.dim('Итоги жизни за год:');
+    const residentsToString = house.residents.length
+        ? `живут: ${
+            house.residents.map((resident) => resident.name).join(', ')
+        }`
+        : 'сейчас никто не живёт';
+
+    Log.dim(`В ${house.name} ${residentsToString}`);
+    Log.dim(`- Заработано денег: ${house.totalEarnedMoney}`);
+    Log.dim(`- Cъедено еды: ${house.totalEatenFood}`);
+    Log.dim(`- Куплено шуб: ${house.totalFurCoatsBought}`);
+}

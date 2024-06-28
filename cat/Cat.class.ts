@@ -27,7 +27,7 @@ export class Cat extends Resident {
             this.changeSatiety(20);
             return true;
         } else {
-            Log.warn(`${this.name} хотел поесть, но дома мало еды`);
+            Log.red(`${this.name} хотел поесть, но дома закончилась еда!`);
             return false;
         }
     }

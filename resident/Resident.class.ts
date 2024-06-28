@@ -59,11 +59,15 @@ export abstract class Resident implements IResident {
     protected checkSatietyAndHappiness() {
         // Если уровень счастья и (или) уровень сытости < 0, вывожу в консоль
         if (this._satiety <= 0) {
-            Log.warn(`${this.name}: сытость <= 0`);
+            Log.red(
+                `${this.name} покинул(а) дом, сытость упала до опасного уровня`,
+            );
             this._house.removeResident(this);
         }
         if (this._happiness <= 0) {
-            Log.warn(`${this.name}: счастье <= 0`);
+            Log.red(
+                `${this.name} покинул(а) дом, счастье упало до опасного уровня`,
+            );
             this._house.removeResident(this);
         }
         // Если уровень счастья и (или) уровень сытости > 100, устанавливаю = 100

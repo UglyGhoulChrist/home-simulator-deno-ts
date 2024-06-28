@@ -33,7 +33,7 @@ export class Husband extends Resident {
             this.changeSatiety(30);
             return true;
         } else {
-            Log.warn(`${this.name} хотел поесть, но дома мало еды`);
+            Log.red(`${this.name} хотел поесть, но дома закончилась еда!`);
             return false;
         }
     }
