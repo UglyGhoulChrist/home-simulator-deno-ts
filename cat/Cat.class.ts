@@ -1,6 +1,10 @@
 import { IHouse } from '../house/House.interface.ts';
 import { Resident } from '../resident/Resident.class.ts';
 import { Log } from '../utils/Log.class.ts';
+import {
+    IWeightedMethod,
+    MethodSelector,
+} from '../utils/MethodSelector.class.ts';
 
 export class Cat extends Resident {
     constructor(name: string, house: IHouse) {
@@ -36,19 +40,24 @@ export class Cat extends Resident {
     // Случайный выбор ежедневного действия
     public randomDailyActivity(): void {
         const methods = [
-            { method: this._eat, description: 'поел' },
-            { method: this._sleep, description: 'поспал' },
-            { method: this._scratchWallpaper, description: 'подрал обои' },
+            { method: this._eat, description: 'поел', weight: .4 },
+            { method: this._sleep, description: 'поспал', weight: .4 },
+            {
+                method: this._scratchWallpaper,
+                description: 'подрал обои',
+                weight: .2,
+            },
         ];
-        const randomMethod =
-            methods[Math.floor(Math.random() * methods.length)];
+
+        const selectedMethod: IWeightedMethod = MethodSelector
+            .selectMethodByWeight(methods);
 
         // Попытка выполнить выбранное действие
-        const actionPerformed: boolean = randomMethod.method.call(this);
+        const actionPerformed: boolean = selectedMethod.method.call(this);
 
         // Логирование действия, если оно выполнено успешно
         if (actionPerformed) {
-            Log.yellow(`${this.name} ${randomMethod.description}`);
+            Log.yellow(`${this.name} ${selectedMethod.description}`);
         }
     }
 }
