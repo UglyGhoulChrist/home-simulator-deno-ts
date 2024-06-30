@@ -2,6 +2,10 @@ import { Cat } from '../cat/Cat.class.ts';
 import { IHouse } from '../house/House.interface.ts';
 import { Resident } from '../resident/Resident.class.ts';
 import { Log } from '../utils/Log.class.ts';
+import {
+    IWeightedMethod,
+    MethodSelector,
+} from '../utils/MethodSelector.class.ts';
 
 export class Child extends Resident {
     constructor(name: string, house: IHouse) {
@@ -43,9 +47,9 @@ export class Child extends Resident {
     // Случайный выбор ежедневного действия
     public randomDailyActivity(): void {
         const methods = [
-            { method: this._eat, description: 'поел' },
-            { method: this._sleep, description: 'поспал' },
-            { method: this._play, description: 'поиграл' },
+            { method: this._eat, description: 'поел', weight: .3 },
+            { method: this._sleep, description: 'поспал', weight: .2 },
+            { method: this._play, description: 'поиграл', weight: .3 },
         ];
 
         // Проверка наличия кота в доме
@@ -58,18 +62,19 @@ export class Child extends Resident {
             methods.push({
                 method: this._petCat,
                 description: 'погладил(а) кота',
+                weight: .2,
             });
         }
 
-        const randomMethod =
-            methods[Math.floor(Math.random() * methods.length)];
+        const selectedMethod: IWeightedMethod = MethodSelector
+            .selectMethodByWeight(methods);
 
         // Попытка выполнить выбранное действие
-        const actionPerformed: boolean = randomMethod.method.call(this);
+        const actionPerformed: boolean = selectedMethod.method.call(this);
 
         // Логирование действия, если оно выполнено успешно
         if (actionPerformed) {
-            Log.green(`${this.name} ${randomMethod.description}`);
+            Log.green(`${this.name} ${selectedMethod.description}`);
             this.checkSatietyAndHappiness();
         }
     }
