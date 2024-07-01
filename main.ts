@@ -11,47 +11,43 @@ console.clear();
 
 // Создаю дом
 const house: IHouse = new House('Солнечный Домик');
-// Создаю жену
-const wife: IResident = new Wife('Милана', house);
-// Прописываю жену в доме
-house.addResident(wife);
-// Создаю мужа
-const husband: IResident = new Husband('Артур', house);
-// Прописываю мужа в доме
-house.addResident(husband);
-// Создаю ребёнка
-const child: IResident = new Child('Роберт', house);
-// Прописываю ребёнка в доме
-house.addResident(child);
-// Создаю кота
-const cat: IResident = new Cat('Снупи', house);
-// Прописываю кота в доме
-house.addResident(cat);
+
+// Создание и заселение жителя
+function createAndAddResident(resident: IResident) {
+    house.addResident(resident);
+}
+
+// Создаю и прописываю в доме жену
+createAndAddResident(new Wife('Милана', house));
+// Создаю и прописываю в доме мужа
+createAndAddResident(new Husband('Артур', house));
+// Создаю и прописываю в доме ребёнка
+createAndAddResident(new Child('Роберт', house));
+// Создаю и прописываю в доме кота
+createAndAddResident(new Cat('Снупи', house));
 
 Log.dim('Жизнь семьи');
 Log.dim(
-    `В ${house.name} заселяются: ${
-        house.residents.map((resident) => resident.name).join(', ')
+    `В ${house.name} заселяются: ${house.residents.map((resident) => resident.name).join(', ')
     }`,
 );
 
-// Запуск симуляции на 10 дней
+// Запускаю симуляцию на 365 дней
 for (let day = 1; day <= 365; day++) {
     Log.dim(`День ${day}:`);
-    const residents: IResident[] = house.residents;
-    residents.map((resident) => resident.randomDailyActivity());
+    house.residents.forEach((resident) => resident.randomDailyActivity());
     house.dailyActivity();
     if (house.dirtLevel >= 100) {
         Log.red('Дом развалился от грязи!');
-        break; // Останавливаем цикл, если уровень грязи >= 100
+        // Останавливаю цикл, если уровень грязи >= 100
+        break;
     }
 }
 
 if (house.dirtLevel < 100) {
     Log.dim('Итоги жизни за год:');
-    const residentsToString = house.residents.length
-        ? `живут: ${
-            house.residents.map((resident) => resident.name).join(', ')
+    const residentsToString: string = house.residents.length
+        ? `живут: ${house.residents.map((resident) => resident.name).join(', ')
         }`
         : 'сейчас никто не живёт';
 

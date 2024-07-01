@@ -8,15 +8,15 @@ export class MockResident extends Resident {
     }
 
     public mockChangeSatiety(amount: number): void {
-        this.changeSatiety(amount);
+        super.changeSatiety(amount);
     }
 
     public mockChangeHappiness(amount: number): void {
-        this.changeHappiness(amount);
+        super.changeHappiness(amount);
     }
 
     public mockCheckSatietyAndHappiness() {
-        this.checkSatietyAndHappiness();
+        super.checkSatietyAndHappiness();
     }
 
     public randomDailyActivity(): void {}
