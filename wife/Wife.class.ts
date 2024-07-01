@@ -74,7 +74,7 @@ export class Wife extends Resident {
     // Случайный выбор ежедневного действия
     public randomDailyActivity(): void {
         const methods = [
-            { method: this._eat, description: 'поел', weight: 2 },
+            { method: this._eat, description: 'поела', weight: 2 },
             {
                 method: this._buyGroceries,
                 description: 'купила продукты',
@@ -101,21 +101,25 @@ export class Wife extends Resident {
         if (hasCat) {
             methods.push({
                 method: this._petCat,
-                description: 'погладил(а) кота',
+                description: 'погладила кота',
                 weight: 3,
             });
         }
 
-        const selectedMethod: IWeightedMethod = MethodSelector
-            .selectMethodByWeight(methods);
+        while (methods.length) {
+            const selectedMethod: IWeightedMethod = MethodSelector
+                .selectMethodByWeight(methods);
 
-        // Попытка выполнить выбранное действие
-        const actionPerformed: boolean = selectedMethod.method.call(this);
-
-        // Логирование действия, если оно выполнено успешно
-        if (actionPerformed) {
-            Log.magenta(`${this.name} ${selectedMethod.description}`);
-            this.checkSatietyAndHappiness();
+            // Попытка выполнить выбранное действие
+            if (selectedMethod.method.call(this)) {
+                // Логирование действия, если оно выполнено успешно
+                Log.magenta(`${this.name} ${selectedMethod.description}`);
+                this.checkSatietyAndHappiness();
+                break;
+            } else {
+                // Удаление выбранного метода из массива methods
+                methods.splice(methods.indexOf(selectedMethod), 1);
+            }
         }
     }
 }

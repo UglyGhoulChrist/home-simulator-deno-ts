@@ -1,6 +1,10 @@
 import { Log } from '../utils/Log.class.ts';
 import { IHouse } from './House.interface.ts';
 import { IResident } from '../resident/Resident.interface.ts';
+import {
+    IWeightedMethod,
+    MethodSelector,
+} from '../utils/MethodSelector.class.ts';
 
 export class House implements IHouse {
     // Название дома
@@ -141,15 +145,17 @@ export class House implements IHouse {
     }
 
     // Несколько раз в год пропадает половина денег
-    private halfMoneyLoss(): void {
+    private _halfMoneyLoss(): boolean {
         const halfMoney: number = Math.floor(this.money / 2);
         this.takeMoney(halfMoney);
+        return true;
     }
 
     // Несколько раз в год пропадает половина еды
-    private halfFoodLoss(): void {
+    private _halfFoodLoss(): boolean {
         const halfFood: number = Math.floor(this.food / 2);
         this.takeFood(halfFood);
+        return true;
     }
 
     // Увеличение общего количества заработанных денег
@@ -196,18 +202,27 @@ export class House implements IHouse {
         this._dirtLevel += 5;
         this.checkDirtLevel();
 
-        // Получение случайного числа
-        const randomNumber: number = Math.floor(Math.random() * 90) + 1;
-        // Пропадает половина денег
-        if (randomNumber === 10) {
-            this.halfMoneyLoss();
-            Log.red('В доме пропала половина денег!');
+        const methods = [
+            { method: () => true, description: '', weight: 47 },
+            {
+                method: this._halfMoneyLoss,
+                description: 'В доме пропала половина денег!',
+                weight: 2,
+            },
+            {
+                method: this._halfFoodLoss,
+                description: 'В доме пропала половина продуктов!',
+                weight: 1,
+            },
+        ];
+
+        const selectedMethod: IWeightedMethod = MethodSelector
+            .selectMethodByWeight(methods);
+
+        // Попытка выполнить выбранное действие
+        if (selectedMethod.method.call(this) && selectedMethod.description) {
+            // Логирование действия, если оно выполнено успешно
+            Log.red(selectedMethod.description);
         }
-        // Пропадает половина еды
-        if (randomNumber === 20) {
-            this.halfFoodLoss();
-            Log.red('В доме пропала половина продуктов!');
-        }
-        // Log.dim(this.houseInfo);
     }
 }

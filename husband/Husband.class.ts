@@ -67,21 +67,25 @@ export class Husband extends Resident {
         if (hasCat) {
             methods.push({
                 method: this._petCat,
-                description: 'погладил(а) кота',
+                description: 'погладила кота',
                 weight: 4,
             });
         }
 
-        const selectedMethod: IWeightedMethod = MethodSelector
-            .selectMethodByWeight(methods);
+        while (methods.length) {
+            const selectedMethod: IWeightedMethod = MethodSelector
+                .selectMethodByWeight(methods);
 
-        // Попытка выполнить выбранное действие
-        const actionPerformed: boolean = selectedMethod.method.call(this);
-
-        // Логирование действия, если оно выполнено успешно
-        if (actionPerformed) {
-            Log.blue(`${this.name} ${selectedMethod.description}`);
-            this.checkSatietyAndHappiness();
+            // Попытка выполнить выбранное действие
+            if (selectedMethod.method.call(this)) {
+                // Логирование действия, если оно выполнено успешно
+                Log.blue(`${this.name} ${selectedMethod.description}`);
+                this.checkSatietyAndHappiness();
+                break;
+            } else {
+                // Удаление выбранного метода из массива methods
+                methods.splice(methods.indexOf(selectedMethod), 1);
+            }
         }
     }
 }
