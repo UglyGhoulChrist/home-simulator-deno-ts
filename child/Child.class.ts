@@ -47,9 +47,9 @@ export class Child extends Resident {
     // Случайный выбор ежедневного действия
     public randomDailyActivity(): void {
         const methods = [
-            { method: this._eat, description: 'поел', weight: .3 },
-            { method: this._sleep, description: 'поспал', weight: .2 },
-            { method: this._play, description: 'поиграл', weight: .3 },
+            { method: this._eat, description: 'поел', weight: 3 },
+            { method: this._sleep, description: 'поспал', weight: 3 },
+            { method: this._play, description: 'поиграл', weight: 3 },
         ];
 
         // Проверка наличия кота в доме
@@ -62,7 +62,7 @@ export class Child extends Resident {
             methods.push({
                 method: this._petCat,
                 description: 'погладил(а) кота',
-                weight: .2,
+                weight: 1,
             });
         }
 

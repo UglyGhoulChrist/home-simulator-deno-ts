@@ -49,13 +49,13 @@ export class Husband extends Resident {
     // Метод случайным образом выбирает что сегодня будет делать жена
     public randomDailyActivity(): void {
         const methods = [
-            { method: this._eat, description: 'поел', weight: .3 },
+            { method: this._eat, description: 'поел', weight: 2 },
             {
                 method: this._goToWork,
                 description: 'сходил на работу',
-                weight: .3,
+                weight: 3,
             },
-            { method: this._playWoT, description: 'поиграл в WoT', weight: .2 },
+            { method: this._playWoT, description: 'поиграл в WoT', weight: 1 },
         ];
 
         // Проверка наличия кота в доме
@@ -68,7 +68,7 @@ export class Husband extends Resident {
             methods.push({
                 method: this._petCat,
                 description: 'погладил(а) кота',
-                weight: .2,
+                weight: 4,
             });
         }
 

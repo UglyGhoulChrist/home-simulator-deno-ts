@@ -74,21 +74,21 @@ export class Wife extends Resident {
     // Случайный выбор ежедневного действия
     public randomDailyActivity(): void {
         const methods = [
-            { method: this._eat, description: 'поел', weight: .2 },
+            { method: this._eat, description: 'поел', weight: 2 },
             {
                 method: this._buyGroceries,
                 description: 'купила продукты',
-                weight: .3,
+                weight: 3,
             },
             {
                 method: this._buyFurCoat,
                 description: 'купила шубу',
-                weight: .1,
+                weight: 1,
             },
             {
                 method: this._cleanHouse,
                 description: 'убралась в доме',
-                weight: .2,
+                weight: 1,
             },
         ];
 
@@ -102,7 +102,7 @@ export class Wife extends Resident {
             methods.push({
                 method: this._petCat,
                 description: 'погладил(а) кота',
-                weight: .2,
+                weight: 3,
             });
         }
 

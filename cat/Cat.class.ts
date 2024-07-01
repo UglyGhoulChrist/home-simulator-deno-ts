@@ -40,12 +40,12 @@ export class Cat extends Resident {
     // Случайный выбор ежедневного действия
     public randomDailyActivity(): void {
         const methods = [
-            { method: this._eat, description: 'поел', weight: .4 },
-            { method: this._sleep, description: 'поспал', weight: .4 },
+            { method: this._eat, description: 'поел', weight: 3 },
+            { method: this._sleep, description: 'поспал', weight: 5 },
             {
                 method: this._scratchWallpaper,
                 description: 'подрал обои',
-                weight: .2,
+                weight: 2,
             },
         ];
 
@@ -58,6 +58,7 @@ export class Cat extends Resident {
         // Логирование действия, если оно выполнено успешно
         if (actionPerformed) {
             Log.yellow(`${this.name} ${selectedMethod.description}`);
+            this.checkSatietyAndHappiness();
         }
     }
 }
