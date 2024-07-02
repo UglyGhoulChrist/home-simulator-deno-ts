@@ -13,12 +13,12 @@ export class Husband extends Resident {
         super(name, house);
     }
 
-    // Ест
+    // Метод для еды
     private _eat(): boolean {
-        if (this.houseName.food >= 30) {
-            this.houseName.takeFood(30);
-            // Увеличиваю счётчик съеденной еды
-            this.houseName.incrementEatenFood(30);
+        const foodNeeded = 30;
+        if (this.houseName.food >= foodNeeded) {
+            this.houseName.takeFood(foodNeeded);
+            this.houseName.incrementEatenFood(foodNeeded);
             this.changeSatiety(30);
             return true;
         } else {
@@ -27,27 +27,27 @@ export class Husband extends Resident {
         }
     }
 
-    // Ходит на работу
+    // Метод для похода на работу
     private _goToWork(): boolean {
         this.changeSatiety(-10);
         this.houseName.addMoney(250);
         return true;
     }
 
-    // Играет в WoT
+    // Метод для игры в WoT
     private _playWoT(): boolean {
         this.changeSatiety(-10);
         this.changeHappiness(20);
         return true;
     }
 
-    // Поглаживание кота
+    // Метод для поглаживания кота
     private _petCat(): boolean {
         this.changeHappiness(5);
         return true;
     }
 
-    // Покупка продуктов
+    // Метод для покупки продуктов
     private _buyGroceries(): boolean {
         if (this.houseName.food <= 20 && this.houseName.money >= 100) {
             this.houseName.takeMoney(100);
@@ -67,7 +67,7 @@ export class Husband extends Resident {
         }
     }
 
-    // Генеральная уборка дома
+    // Метод для генеральной уборки дома
     private _cleanHouse(): boolean {
         this.changeSatiety(-10);
         this.changeHappiness(10);
@@ -75,10 +75,16 @@ export class Husband extends Resident {
         return true;
     }
 
-    // Случайный выбор ежедневного действия
+    // Метод для посещения родителей
+    private _visitParents(): boolean {
+        this.changeSatiety(50);
+        this.changeHappiness(20);
+        return true;
+    }
+
+    // Метод для случайного выбора ежедневного действия
     public randomDailyActivity(): void {
-        const methods = [
-            { method: this._eat, description: 'поел', weight: 2 },
+        const activities = [
             {
                 method: this._goToWork,
                 description: 'сходил на работу',
@@ -87,16 +93,30 @@ export class Husband extends Resident {
             { method: this._playWoT, description: 'поиграл в WoT', weight: 1 },
         ];
 
+        if (this.satiety <= 20) {
+            activities.push({
+                method: this._visitParents,
+                description: 'сходил к родителям покушать',
+                weight: 30,
+            });
+        } else {
+            activities.push({
+                method: this._eat,
+                description: 'поел',
+                weight: 3,
+            });
+        }
+
         // Проверка наличия кота в доме
         const hasCat: boolean = this.houseName.residents.some((resident) =>
             resident instanceof Cat
         );
 
-        // Если кот есть, добавляем действие PetCat в список возможных действий
+        // Если кот есть, добавляем действие petCat в список возможных действий
         if (hasCat) {
-            methods.push({
+            activities.push({
                 method: this._petCat,
-                description: 'погладила кота',
+                description: 'погладил кота',
                 weight: 4,
             });
         }
@@ -106,33 +126,33 @@ export class Husband extends Resident {
             resident instanceof Wife
         );
 
-        // Если мужа нет, добавляем действие GoToWork в список возможных действий
+        // Если жены нет, добавляем действия buyGroceries и cleanHouse в список возможных действий
         if (!hasWife) {
-            methods.push({
+            activities.push({
                 method: this._buyGroceries,
                 description: 'купил продукты',
                 weight: 3,
             });
-            methods.push({
+            activities.push({
                 method: this._cleanHouse,
                 description: 'убрался в доме',
                 weight: 3,
             });
         }
 
-        while (methods.length) {
-            const selectedMethod: IWeightedMethod = MethodSelector
-                .selectMethodByWeight(methods);
+        while (activities.length) {
+            const selectedActivity: IWeightedMethod = MethodSelector
+                .selectMethodByWeight(activities);
 
             // Попытка выполнить выбранное действие
-            if (selectedMethod.method.call(this)) {
+            if (selectedActivity.method.call(this)) {
                 // Логирование действия, если оно выполнено успешно
-                Log.blue(`${this.name} ${selectedMethod.description}`);
+                Log.blue(`${this.name} ${selectedActivity.description}`);
                 this.checkSatietyAndHappiness();
                 break;
             } else {
-                // Удаление выбранного метода из массива methods
-                methods.splice(methods.indexOf(selectedMethod), 1);
+                // Удаление выбранного метода из массива activities
+                activities.splice(activities.indexOf(selectedActivity), 1);
             }
         }
     }

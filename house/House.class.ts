@@ -123,8 +123,9 @@ export class House implements IHouse {
     }
 
     // Генеральная уборка
-    public cleanHouse(): void {
+    public cleanHouse(): boolean {
         this._dirtLevel = 0;
+        return true;
     }
 
     // Проверка уровня грязи
@@ -133,7 +134,7 @@ export class House implements IHouse {
             Log.red('Дом стал слишком грязным!');
             this._dirtLevel = Math.min(this._dirtLevel, 100);
         }
-        if (this._dirtLevel >= 80) {
+        if (this._dirtLevel >= 90) {
             this.residents.forEach((resident) => {
                 // Проверяем, содержит ли resident метод changeHappiness
                 if (
@@ -202,7 +203,7 @@ export class House implements IHouse {
         this._dirtLevel += 5;
         this.checkDirtLevel();
 
-        const methods = [
+        const activities = [
             { method: () => true, description: '', weight: 47 },
             {
                 method: this._halfMoneyLoss,
@@ -216,8 +217,17 @@ export class House implements IHouse {
             },
         ];
 
+        if (this.dirtLevel >= 80 && this.money >= 100) {
+            this.takeMoney(100);
+            activities.push({
+                method: this.cleanHouse,
+                description: 'В доме слишком грязно, вызвали уборщицу!',
+                weight: 100,
+            });
+        }
+
         const selectedMethod: IWeightedMethod = MethodSelector
-            .selectMethodByWeight(methods);
+            .selectMethodByWeight(activities);
 
         // Попытка выполнить выбранное действие
         if (selectedMethod.method.call(this) && selectedMethod.description) {

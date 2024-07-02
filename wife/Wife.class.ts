@@ -13,12 +13,12 @@ export class Wife extends Resident {
         super(name, house);
     }
 
-    // Ест
+    // Метод для еды
     private _eat(): boolean {
-        if (this.houseName.food >= 20) {
-            this.houseName.takeFood(20);
-            // Увеличиваю счётчик съеденной еды
-            this.houseName.incrementEatenFood(20);
+        const foodNeeded = 20;
+        if (this.houseName.food >= foodNeeded) {
+            this.houseName.takeFood(foodNeeded);
+            this.houseName.incrementEatenFood(foodNeeded);
             this.changeSatiety(30);
             return true;
         } else {
@@ -27,11 +27,12 @@ export class Wife extends Resident {
         }
     }
 
-    // Покупка продуктов
+    // Метод для покупки продуктов
     private _buyGroceries(): boolean {
-        if (this.houseName.money >= 50) {
-            this.houseName.takeMoney(50);
-            this.houseName.addFood(50);
+        const cost = 50;
+        if (this.houseName.money >= cost) {
+            this.houseName.takeMoney(cost);
+            this.houseName.addFood(cost);
             this.changeSatiety(-10);
             return true;
         } else {
@@ -42,10 +43,11 @@ export class Wife extends Resident {
         }
     }
 
-    // Покупка шубы
+    // Метод для покупки шубы
     private _buyFurCoat(): boolean {
-        if (this.houseName.money >= 300) {
-            this.houseName.takeMoney(300);
+        const cost = 300;
+        if (this.houseName.money >= cost) {
+            this.houseName.takeMoney(cost);
             this.changeHappiness(100);
             this.changeSatiety(-10);
             this.houseName.incrementFurCoatsBought();
@@ -58,7 +60,7 @@ export class Wife extends Resident {
         }
     }
 
-    // Генеральная уборка дома
+    // Метод для генеральной уборки дома
     private _cleanHouse(): boolean {
         this.changeSatiety(-10);
         this.changeHappiness(10);
@@ -66,48 +68,64 @@ export class Wife extends Resident {
         return true;
     }
 
-    // Поглаживание кота
+    // Метод для поглаживания кота
     private _petCat(): boolean {
         this.changeHappiness(5);
         return true;
     }
 
-    // Ходит на работу
+    // Метод для похода на работу
     private _goToWork(): boolean {
         this.changeSatiety(-10);
         this.houseName.addMoney(250);
         return true;
     }
 
-    // Случайный выбор ежедневного действия
+    // Метод для посещения родителей
+    private _visitParents(): boolean {
+        this.changeSatiety(50);
+        this.changeHappiness(20);
+        return true;
+    }
+
+    // Метод для случайного выбора ежедневного действия
     public randomDailyActivity(): void {
-        const methods = [
-            { method: this._eat, description: 'поела', weight: 2 },
+        const activities = [
             {
                 method: this._buyGroceries,
                 description: 'купила продукты',
                 weight: 3,
             },
-            {
-                method: this._buyFurCoat,
-                description: 'купила шубу',
-                weight: 1,
-            },
+            { method: this._buyFurCoat, description: 'купила шубу', weight: 1 },
             {
                 method: this._cleanHouse,
                 description: 'убралась в доме',
-                weight: 1,
+                weight: 2,
             },
         ];
+
+        if (this.satiety <= 20) {
+            activities.push({
+                method: this._visitParents,
+                description: 'сходила к родителям покушать',
+                weight: 30,
+            });
+        } else {
+            activities.push({
+                method: this._eat,
+                description: 'поела',
+                weight: 3,
+            });
+        }
 
         // Проверка наличия кота в доме
         const hasCat: boolean = this.houseName.residents.some((resident) =>
             resident instanceof Cat
         );
 
-        // Если кот есть, добавляем действие PetCat в список возможных действий
+        // Если кот есть, добавляем действие petCat в список возможных действий
         if (hasCat) {
-            methods.push({
+            activities.push({
                 method: this._petCat,
                 description: 'погладила кота',
                 weight: 3,
@@ -119,28 +137,28 @@ export class Wife extends Resident {
             resident instanceof Husband
         );
 
-        // Если мужа нет, добавляем действие GoToWork в список возможных действий
+        // Если мужа нет, добавляем действие goToWork в список возможных действий
         if (!hasHusband) {
-            methods.push({
+            activities.push({
                 method: this._goToWork,
                 description: 'сходила на работу',
                 weight: 3,
             });
         }
 
-        while (methods.length) {
-            const selectedMethod: IWeightedMethod = MethodSelector
-                .selectMethodByWeight(methods);
+        while (activities.length) {
+            const selectedActivity: IWeightedMethod = MethodSelector
+                .selectMethodByWeight(activities);
 
             // Попытка выполнить выбранное действие
-            if (selectedMethod.method.call(this)) {
+            if (selectedActivity.method.call(this)) {
                 // Логирование действия, если оно выполнено успешно
-                Log.magenta(`${this.name} ${selectedMethod.description}`);
+                Log.magenta(`${this.name} ${selectedActivity.description}`);
                 this.checkSatietyAndHappiness();
                 break;
             } else {
-                // Удаление выбранного метода из массива methods
-                methods.splice(methods.indexOf(selectedMethod), 1);
+                // Удаление выбранного метода из массива activities
+                activities.splice(activities.indexOf(selectedActivity), 1);
             }
         }
     }
