@@ -1,5 +1,6 @@
 import { Cat } from '../cat/Cat.class.ts';
 import { IHouse } from '../house/House.interface.ts';
+import { Husband } from '../husband/Husband.class.ts';
 import { Resident } from '../resident/Resident.class.ts';
 import { Log } from '../utils/Log.class.ts';
 import {
@@ -71,6 +72,13 @@ export class Wife extends Resident {
         return true;
     }
 
+    // Ходит на работу
+    private _goToWork(): boolean {
+        this.changeSatiety(-10);
+        this.houseName.addMoney(250);
+        return true;
+    }
+
     // Случайный выбор ежедневного действия
     public randomDailyActivity(): void {
         const methods = [
@@ -102,6 +110,20 @@ export class Wife extends Resident {
             methods.push({
                 method: this._petCat,
                 description: 'погладила кота',
+                weight: 3,
+            });
+        }
+
+        // Проверка наличия мужа в доме
+        const hasHusband: boolean = this.houseName.residents.some((resident) =>
+            resident instanceof Husband
+        );
+
+        // Если мужа нет, добавляем действие GoToWork в список возможных действий
+        if (hasHusband) {
+            methods.push({
+                method: this._goToWork,
+                description: 'сходила на работу',
                 weight: 3,
             });
         }
