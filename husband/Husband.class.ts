@@ -6,6 +6,7 @@ import {
     IWeightedMethod,
     MethodSelector,
 } from '../utils/MethodSelector.class.ts';
+import { Wife } from '../wife/Wife.class.ts';
 
 export class Husband extends Resident {
     constructor(name: string, house: IHouse) {
@@ -46,7 +47,35 @@ export class Husband extends Resident {
         return true;
     }
 
-    // Метод случайным образом выбирает что сегодня будет делать жена
+    // Покупка продуктов
+    private _buyGroceries(): boolean {
+        if (this.houseName.food <= 20 && this.houseName.money >= 100) {
+            this.houseName.takeMoney(100);
+            this.houseName.addFood(100);
+            this.changeSatiety(-10);
+            return true;
+        } else if (this.houseName.money >= 50) {
+            this.houseName.takeMoney(50);
+            this.houseName.addFood(50);
+            this.changeSatiety(-10);
+            return true;
+        } else {
+            Log.red(
+                `${this.name} хотел купить еды, но дома закончились деньги!`,
+            );
+            return false;
+        }
+    }
+
+    // Генеральная уборка дома
+    private _cleanHouse(): boolean {
+        this.changeSatiety(-10);
+        this.changeHappiness(10);
+        this.houseName.cleanHouse();
+        return true;
+    }
+
+    // Случайный выбор ежедневного действия
     public randomDailyActivity(): void {
         const methods = [
             { method: this._eat, description: 'поел', weight: 2 },
@@ -69,6 +98,25 @@ export class Husband extends Resident {
                 method: this._petCat,
                 description: 'погладила кота',
                 weight: 4,
+            });
+        }
+
+        // Проверка наличия жены в доме
+        const hasWife: boolean = this.houseName.residents.some((resident) =>
+            resident instanceof Wife
+        );
+
+        // Если мужа нет, добавляем действие GoToWork в список возможных действий
+        if (!hasWife) {
+            methods.push({
+                method: this._buyGroceries,
+                description: 'купил продукты',
+                weight: 3,
+            });
+            methods.push({
+                method: this._cleanHouse,
+                description: 'убрался в доме',
+                weight: 3,
             });
         }
 
