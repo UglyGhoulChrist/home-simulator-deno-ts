@@ -120,7 +120,7 @@ export class Wife extends Resident {
         );
 
         // Если мужа нет, добавляем действие GoToWork в список возможных действий
-        if (hasHusband) {
+        if (!hasHusband) {
             methods.push({
                 method: this._goToWork,
                 description: 'сходила на работу',
