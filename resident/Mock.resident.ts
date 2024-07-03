@@ -19,5 +19,7 @@ export class MockResident extends Resident {
         super.checkSatietyAndHappiness();
     }
 
-    public randomDailyActivity(): void {}
+    public randomDailyActivity(): void { }
+
+    protected logActivity(): void { }
 }

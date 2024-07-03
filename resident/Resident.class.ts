@@ -1,5 +1,13 @@
+import { Cat } from '../cat/Cat.class.ts';
+import { Child } from '../child/Child.class.ts';
 import { IHouse } from '../house/House.interface.ts';
+import { Husband } from '../husband/Husband.class.ts';
 import { Log } from '../utils/Log.class.ts';
+import {
+    IWeightedMethod,
+    MethodSelector,
+} from '../utils/MethodSelector.class.ts';
+import { Wife } from '../wife/Wife.class.ts';
 import { IResident } from './Resident.interface.ts';
 
 export abstract class Resident implements IResident {
@@ -13,7 +21,7 @@ export abstract class Resident implements IResident {
     private _happiness: number = 100;
 
     // Случайный выбор ежедневного действия
-    public abstract randomDailyActivity(): void;
+    // public abstract randomDailyActivity(): void;
 
     constructor(name: string, house: IHouse) {
         this._name = name;
@@ -74,4 +82,49 @@ export abstract class Resident implements IResident {
         this._satiety = Math.min(this._satiety, 100);
         this._happiness = Math.min(this._happiness, 100);
     }
+
+    // Метод для еды
+    protected eat(foodNeeded: number, increaseHappines: number): boolean {
+        if (this.houseName.food >= foodNeeded) {
+            this.houseName.takeFood(foodNeeded);
+            this.houseName.incrementEatenFood(foodNeeded);
+            this.changeSatiety(increaseHappines);
+            return true;
+        } else {
+            Log.red(`${this.name} хотел поесть, но дома закончилась еда!`);
+            return false;
+        }
+    }
+
+    // Метод для случайного выбора ежедневного действия
+    protected randomDailyActivity(
+        activities: {
+            method: () => boolean;
+            description: string;
+            weight: number;
+        }[],
+    ): void {
+        while (activities.length) {
+            const selectedActivity: IWeightedMethod = MethodSelector
+                .selectMethodByWeight(activities);
+
+            // Попытка выполнить выбранное действие
+            if (selectedActivity.method.call(this)) {
+                // Логирование действия, если оно выполнено успешно
+
+                this.logActivity(
+                    `${this.name} ${selectedActivity.description}`,
+                );
+
+                // Log.magenta(`${this.name} ${selectedActivity.description}`);
+                this.checkSatietyAndHappiness();
+                break;
+            } else {
+                // Удаление выбранного метода из массива activities
+                activities.splice(activities.indexOf(selectedActivity), 1);
+            }
+        }
+    }
+
+    protected abstract logActivity(description: string): void;
 }

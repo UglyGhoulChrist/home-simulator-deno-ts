@@ -1,10 +1,6 @@
 import { IHouse } from '../house/House.interface.ts';
 import { Resident } from '../resident/Resident.class.ts';
 import { Log } from '../utils/Log.class.ts';
-import {
-    IWeightedMethod,
-    MethodSelector,
-} from '../utils/MethodSelector.class.ts';
 
 export class Cat extends Resident {
     constructor(name: string, house: IHouse) {
@@ -13,16 +9,9 @@ export class Cat extends Resident {
 
     // Метод для еды
     private _eat(): boolean {
-        const foodNeeded = 5;
-        if (this.houseName.food >= foodNeeded) {
-            this.houseName.takeFood(foodNeeded);
-            this.houseName.incrementEatenFood(foodNeeded);
-            this.changeSatiety(20);
-            return true;
-        } else {
-            Log.red(`${this.name} хотел поесть, но дома закончилась еда!`);
-            return false;
-        }
+        const foodNeeded: number = 5;
+        const increaseHappines: number = 20;
+        return super.eat(foodNeeded, increaseHappines);
     }
 
     // Метод для сна
@@ -71,20 +60,10 @@ export class Cat extends Resident {
             });
         }
 
-        while (activities.length) {
-            const selectedActivity: IWeightedMethod = MethodSelector
-                .selectMethodByWeight(activities);
+        return super.randomDailyActivity(activities);
+    }
 
-            // Попытка выполнить выбранное действие
-            if (selectedActivity.method.call(this)) {
-                // Логирование действия, если оно выполнено успешно
-                Log.yellow(`${this.name} ${selectedActivity.description}`);
-                this.checkSatietyAndHappiness();
-                break;
-            } else {
-                // Удаление выбранного метода из массива activities
-                activities.splice(activities.indexOf(selectedActivity), 1);
-            }
-        }
+    protected logActivity(description: string): void {
+        Log.yellow(description);
     }
 }

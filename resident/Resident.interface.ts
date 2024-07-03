@@ -12,5 +12,5 @@ export interface IResident {
     // Получение информации о жителе
     residentInfo: string;
     // Случайный выбор ежедневного действия
-    randomDailyActivity: () => void;
+    // randomDailyActivity: () => void;
 }

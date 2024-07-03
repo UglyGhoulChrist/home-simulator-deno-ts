@@ -28,14 +28,21 @@ createAndAddResident(new Cat('Снупи', house));
 
 Log.dim('Жизнь семьи');
 Log.dim(
-    `В ${house.name} заселяются: ${house.residents.map((resident) => resident.name).join(', ')
+    `В ${house.name} заселяются: ${
+        house.residents.map((resident) => resident.name).join(', ')
     }`,
 );
 
 // Запускаю симуляцию на 365 дней
 for (let day = 1; day <= 365; day++) {
     Log.dim(`День ${day}:`);
-    house.residents.forEach((resident) => resident.randomDailyActivity());
+    house.residents.forEach((resident) => {
+        // Проверяем, содержит ли resident метод randomDailyActivity
+        if (
+            'randomDailyActivity' in resident &&
+            typeof resident['randomDailyActivity'] === 'function'
+        ) resident.randomDailyActivity();
+    });
     house.dailyActivity();
     if (house.dirtLevel >= 100) {
         Log.red('Дом развалился от грязи!');
@@ -47,7 +54,8 @@ for (let day = 1; day <= 365; day++) {
 if (house.dirtLevel < 100) {
     Log.dim('Итоги жизни за год:');
     const residentsToString: string = house.residents.length
-        ? `живут: ${house.residents.map((resident) => resident.name).join(', ')
+        ? `живут: ${
+            house.residents.map((resident) => resident.name).join(', ')
         }`
         : 'сейчас никто не живёт';
 
